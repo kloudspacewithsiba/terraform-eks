@@ -27,6 +27,7 @@ jobs:
       run: terraform init
 
   terraform_format:
+    needs: terraform_init
     name: 'Terraform'
     runs-on: ubuntu-latest
     defaults:
@@ -43,7 +44,8 @@ jobs:
       working-directory: ./
       run: terraform fmt
 
-  terraform_plam:
+  terraform_plan:
+    needs: terraform_format
     name: 'Terraform'
     runs-on: ubuntu-latest
     defaults:
@@ -55,12 +57,17 @@ jobs:
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
+
+    - name: Terraform Init
+      working-directory: ./
+      run: terraform init
 
     - name: Terraform Plan
       working-directory: ./
       run: terraform plan
 
   terraform_apply:
+    needs: terraform_plan
     name: 'Terraform'
     runs-on: ubuntu-latest
     defaults:
@@ -72,6 +79,10 @@ jobs:
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
+
+    - name: Terraform Init
+      working-directory: ./
+      run: terraform init
 
     - name: Terraform Apply
       working-directory: ./
